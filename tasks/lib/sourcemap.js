@@ -121,6 +121,9 @@ exports.init = function(grunt) {
       // Consider the relative path from source files to new sourcemap.
       var sourcePathToSourceMapPath =
         path.relative(path.dirname(this.dest), path.dirname(sourceMapPath));
+      // sourceMap path references are URLs, so ensure forward slashes are used for paths passed to sourcemap library
+      relativeFilename = relativeFilename.replace(/\\/g, '/');
+      sourcePathToSourceMapPath = sourcePathToSourceMapPath.replace(/\\/g, '/');
       // Store the sourceMap so that it may later be consumed.
       this.maps.push([
         sourceMapConsumer, relativeFilename, sourcePathToSourceMapPath
