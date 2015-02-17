@@ -95,7 +95,10 @@ exports.init = function(grunt) {
   // prior sourcemap and return src with sourceMappingURL removed.
   SourceMapConcatHelper.prototype.addlines = function(src, filename) {
     var relativeFilename = path.relative(path.dirname(this.dest), filename);
-
+    // sourceMap path references are URLs, so ensure forward slashes are used for paths passed to sourcemap library
+    relativeFilename = relativeFilename.replace(/\\/g, '/');
+    // Replace CRLF on Windows with LF
+    src = src.replace(/\r\n/g, '\n');
     var node;
     if (
       /\/\/[@#]\s+sourceMappingURL=(.+)/.test(src) ||
@@ -122,7 +125,6 @@ exports.init = function(grunt) {
       var sourcePathToSourceMapPath =
         path.relative(path.dirname(this.dest), path.dirname(sourceMapPath));
       // sourceMap path references are URLs, so ensure forward slashes are used for paths passed to sourcemap library
-      relativeFilename = relativeFilename.replace(/\\/g, '/');
       sourcePathToSourceMapPath = sourcePathToSourceMapPath.replace(/\\/g, '/');
       // Store the sourceMap so that it may later be consumed.
       this.maps.push([
@@ -173,8 +175,11 @@ exports.init = function(grunt) {
 
   // Return a string for inline use or write the source map to disk.
   SourceMapConcatHelper.prototype._write = function() {
+    // ensure we're using forward slashes, because these are URLs
+    var file = path.relative(path.dirname(this.dest), this.files.dest);
+    file = file.replace(/\\/g, '/');
     var code_map = this.node.toStringWithSourceMap({
-      file: path.relative(path.dirname(this.dest), this.files.dest)
+      file: file
     });
     // Consume the new sourcemap.
     var generator = SourceMapGenerator.fromSourceMap(
