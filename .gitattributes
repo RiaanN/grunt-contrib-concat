@@ -1,2 +1,2 @@
 * text=auto
-test/fixtures/* text eol=lf
+/test/fixtures/* text eol=lf
