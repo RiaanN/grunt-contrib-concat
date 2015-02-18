@@ -97,8 +97,6 @@ exports.init = function(grunt) {
     var relativeFilename = path.relative(path.dirname(this.dest), filename);
     // sourceMap path references are URLs, so ensure forward slashes are used for paths passed to sourcemap library
     relativeFilename = relativeFilename.replace(/\\/g, '/');
-    // Replace CRLF on Windows with LF
-    src = src.replace(/\r\n/g, '\n');
     var node;
     if (
       /\/\/[@#]\s+sourceMappingURL=(.+)/.test(src) ||
